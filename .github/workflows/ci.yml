@@ -1,6 +1,6 @@
 name: Build and test
 
-on: [push]
+on: workflow_dispatch
 
 jobs:
   build:
@@ -8,20 +8,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-18.04, ubuntu-20.04]
-        conf-shared: [--enable-static, --enable-shared ]
-        conf-xml: [--with-expat, --with-libxml2 ]
-        conf-ssl: [--without-ssl, --with-ssl=openssl, --with-ssl=gnutls]
-        conf-memleak: [--disable-memleak, --enable-memleak]
-        conf-debug: [--enable-debug, --disable-debug]
+        os: [ubuntu-latest]
+        conf-ssl: [--without-ssl]
     steps:
     - uses: actions/checkout@v2
     - run: ./autogen.sh
     - run: case ${{matrix.conf-ssl}} in
            *gnutls) sudo apt-get update && sudo apt-get -y install libgnutls28-dev gnutls-bin xmlto ;;
            esac
-    - run: ./configure ${{matrix.conf-shared}} ${{matrix.conf-xml}}
-                       ${{matrix.conf-ssl}} ${{matrix.conf-memleak}}
-                       ${{matrix.conf-debug}}
+    - run: ./configure ${{matrix.conf-ssl}} 
     - run: make
     - run: make check
