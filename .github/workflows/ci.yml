@@ -15,6 +15,8 @@ jobs:
     - run: ./autogen.sh
     - run: sudo apt-get update && sudo apt-get -y install libgnutls28-dev gnutls-bin xmlto
     - run: ./configure ${{matrix.conf-ssl}} --prefix $HOME/inst 
-    - run: make all
+    - run: make
+    - run: make po
+    - run: make docs
     - run: make check
     - run: make install
