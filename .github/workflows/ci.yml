@@ -18,5 +18,6 @@ jobs:
            esac
     - run: ./configure ${{matrix.conf-ssl}} --prefi $HOME/inst 
     - run: make
+    - run: make doxygen
     - run: make check
     - run: make install
